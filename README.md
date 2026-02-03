@@ -8,7 +8,7 @@ Notion CLI for coding agents.
 npm install -g github:YOUR_ORG_OR_USER/notion-cli
 ```
 
-This repo uses a `prepare` script to build on install.
+This repo includes prebuilt `dist/`, so installation does not require TypeScript.
 
 ## Private Repo Install
 
