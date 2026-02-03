@@ -13,7 +13,7 @@ export function registerOps(program: Command, helpers: CommandHelpers): void {
     .command("get [op_id]")
     .description("Get op receipt")
     .option("--id <id>", "Op id")
-    .action(async (opId, opts) => {
+    .action(async (opId, opts, command) => {
       await runAction("ops get", opts, async () => {
         const id = parseId(opId, opts.id);
         if (!id) {
@@ -32,7 +32,7 @@ export function registerOps(program: Command, helpers: CommandHelpers): void {
           });
         }
         return { data: found };
-      });
+      }, [], command);
     });
 
   ops
@@ -40,7 +40,7 @@ export function registerOps(program: Command, helpers: CommandHelpers): void {
     .description("Wait for op completion")
     .option("--id <id>", "Op id")
     .option("--timeout <sec>", "Timeout seconds", (value) => Number(value), 60)
-    .action(async (opId, opts) => {
+    .action(async (opId, opts, command) => {
       await runAction("ops wait", opts, async (ctx) => {
         const id = parseId(opId, opts.id);
         if (!id) {
@@ -94,6 +94,6 @@ export function registerOps(program: Command, helpers: CommandHelpers): void {
           suggestedAction: "Increase --timeout",
           context: { op_id: id }
         });
-      });
+      }, [], command);
     });
 }

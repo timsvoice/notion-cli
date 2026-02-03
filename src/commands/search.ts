@@ -15,7 +15,7 @@ export function registerSearch(program: Command, helpers: CommandHelpers): void 
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("search", opts, async (ctx) => {
         requireToken(ctx.config);
         const filter = await readJsonInput(opts.filter);
@@ -55,6 +55,6 @@ export function registerSearch(program: Command, helpers: CommandHelpers): void 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      }, [opts.filter, opts.sort]);
+      }, [opts.filter, opts.sort], command);
     });
 }

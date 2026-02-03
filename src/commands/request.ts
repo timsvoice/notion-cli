@@ -12,7 +12,7 @@ export function registerRequest(program: Command, helpers: CommandHelpers): void
     .requiredOption("--path <path>", "Request path")
     .option("--query <json>", "Query JSON or @file")
     .option("--body <json>", "Body JSON or @file")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("request", opts, async (ctx) => {
         requireToken(ctx.config);
         const query = (await readJsonInput(opts.query)) as Record<string, any> | null;
@@ -28,6 +28,6 @@ export function registerRequest(program: Command, helpers: CommandHelpers): void
           retries: ctx.config.retries
         });
         return { data: response.data };
-      }, [opts.query, opts.body]);
+      }, [opts.query, opts.body], command);
     });
 }

@@ -13,7 +13,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
     .command("get [data_source_id]")
     .description("Get data source")
     .option("--id <id>", "Data source id")
-    .action(async (dataSourceId, opts) => {
+    .action(async (dataSourceId, opts, command) => {
       await runAction("data-sources get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(dataSourceId, opts.id);
@@ -32,7 +32,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   dataSources
@@ -44,7 +44,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (dataSourceId, opts) => {
+    .action(async (dataSourceId, opts, command) => {
       await runAction("data-sources query", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(dataSourceId, opts.id);
@@ -86,7 +86,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      }, [opts.filter, opts.sorts]);
+      }, [opts.filter, opts.sorts], command);
     });
 
   dataSources
@@ -99,7 +99,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
     .option("--cover <json>", "Cover JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("data-sources create", opts, async (ctx) => {
         requireToken(ctx.config);
         const body = {
@@ -124,7 +124,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.parent, opts.title, opts.properties, opts.icon, opts.cover]);
+      }, [opts.parent, opts.title, opts.properties, opts.icon, opts.cover], command);
     });
 
   dataSources
@@ -138,7 +138,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
     .option("--cover <json>", "Cover JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (dataSourceId, opts) => {
+    .action(async (dataSourceId, opts, command) => {
       await runAction("data-sources update", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(dataSourceId, opts.id);
@@ -170,7 +170,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.title, opts.properties, opts.description, opts.icon, opts.cover]);
+      }, [opts.title, opts.properties, opts.description, opts.icon, opts.cover], command);
     });
 
   dataSources
@@ -180,7 +180,7 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (dataSourceId, opts) => {
+    .action(async (dataSourceId, opts, command) => {
       await runAction("data-sources list-templates", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(dataSourceId, opts.id);
@@ -221,6 +221,6 @@ export function registerDataSources(program: Command, helpers: CommandHelpers): 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 }

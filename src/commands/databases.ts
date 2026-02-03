@@ -12,7 +12,7 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
     .command("get [database_id]")
     .description("Get database")
     .option("--id <id>", "Database id")
-    .action(async (databaseId, opts) => {
+    .action(async (databaseId, opts, command) => {
       await runAction("databases get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(databaseId, opts.id);
@@ -31,7 +31,7 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   databases
@@ -45,7 +45,7 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
     .option("--description <json>", "Description JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("databases create", opts, async (ctx) => {
         requireToken(ctx.config);
         const body = {
@@ -56,10 +56,10 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
           cover: await readJsonInput(opts.cover),
           description: await readJsonInput(opts.description)
         };
-        await validateInput(ctx, schemaPath("databases-create.schema.json"), body);
         if (opts.dryRun) {
           return { data: { dry_run: true, request: body }, exitCode: 40 };
         }
+        await validateInput(ctx, schemaPath("databases-create.schema.json"), body);
         const response = await request<any>({
           method: "POST",
           path: "/databases",
@@ -71,7 +71,7 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.parent, opts.title, opts.properties, opts.icon, opts.cover, opts.description]);
+      }, [opts.parent, opts.title, opts.properties, opts.icon, opts.cover, opts.description], command);
     });
 
   databases
@@ -85,7 +85,7 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
     .option("--cover <json>", "Cover JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (databaseId, opts) => {
+    .action(async (databaseId, opts, command) => {
       await runAction("databases update", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(databaseId, opts.id);
@@ -117,6 +117,6 @@ export function registerDatabases(program: Command, helpers: CommandHelpers): vo
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.title, opts.properties, opts.description, opts.icon, opts.cover]);
+      }, [opts.title, opts.properties, opts.description, opts.icon, opts.cover], command);
     });
 }

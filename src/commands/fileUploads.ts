@@ -23,7 +23,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
     .requiredOption("--size <bytes>", "File size", (value) => Number(value))
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("file-uploads create", opts, async (ctx) => {
         requireToken(ctx.config);
         const body = {
@@ -46,7 +46,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   fileUploads
@@ -57,7 +57,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
     .option("--chunk-size <bytes>", "Chunk size", (value) => Number(value), DEFAULT_CHUNK_SIZE)
     .option("--dry-run", "Dry run")
     .option("--async", "Create op receipt and pollable metadata")
-    .action(async (fileUploadId, opts) => {
+    .action(async (fileUploadId, opts, command) => {
       await runAction("file-uploads send", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(fileUploadId, opts.id);
@@ -108,7 +108,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
         }
 
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   fileUploads
@@ -116,7 +116,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
     .description("Complete file upload")
     .option("--id <id>", "File upload id")
     .option("--dry-run", "Dry run")
-    .action(async (fileUploadId, opts) => {
+    .action(async (fileUploadId, opts, command) => {
       await runAction("file-uploads complete", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(fileUploadId, opts.id);
@@ -141,14 +141,14 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   fileUploads
     .command("get [file_upload_id]")
     .description("Get file upload")
     .option("--id <id>", "File upload id")
-    .action(async (fileUploadId, opts) => {
+    .action(async (fileUploadId, opts, command) => {
       await runAction("file-uploads get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(fileUploadId, opts.id);
@@ -167,7 +167,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   fileUploads
@@ -177,7 +177,7 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("file-uploads list", opts, async (ctx) => {
         requireToken(ctx.config);
         if (opts.all) {
@@ -213,6 +213,6 @@ export function registerFileUploads(program: Command, helpers: CommandHelpers): 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 }

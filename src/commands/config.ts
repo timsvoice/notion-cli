@@ -62,7 +62,7 @@ export function registerConfig(program: Command, helpers: CommandHelpers): void 
   config
     .command("set <key> <value>")
     .description("Set a configuration value")
-    .action(async (key, value, opts) => {
+    .action(async (key, value, opts, command) => {
       await runAction("config set", opts, async () => {
         const existing = (await loadConfigFile()) ?? {};
         const parsed = parseKey(key);
@@ -78,13 +78,13 @@ export function registerConfig(program: Command, helpers: CommandHelpers): void 
 
         await saveConfigFile(existing);
         return { data: { ok: true, path: key } };
-      });
+      }, [], command);
     });
 
   config
     .command("get <key>")
     .description("Get a configuration value")
-    .action(async (key, opts) => {
+    .action(async (key, opts, command) => {
       await runAction("config get", opts, async () => {
         const existing = (await loadConfigFile()) ?? {};
         const parsed = parseKey(key);
@@ -96,13 +96,13 @@ export function registerConfig(program: Command, helpers: CommandHelpers): void 
         const profileName = parsed.profile ?? existing.default_profile ?? "default";
         const value = existing.profiles?.[profileName]?.[parsed.field] ?? null;
         return { data: { value } };
-      });
+      }, [], command);
     });
 
   config
     .command("unset <key>")
     .description("Remove a configuration value")
-    .action(async (key, opts) => {
+    .action(async (key, opts, command) => {
       await runAction("config unset", opts, async () => {
         const existing = (await loadConfigFile()) ?? {};
         const parsed = parseKey(key);
@@ -118,6 +118,6 @@ export function registerConfig(program: Command, helpers: CommandHelpers): void 
 
         await saveConfigFile(existing);
         return { data: { ok: true, path: key } };
-      });
+      }, [], command);
     });
 }

@@ -18,7 +18,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
     .option("--cover <json>", "Cover JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("pages create", opts, async (ctx) => {
         requireToken(ctx.config);
         const body = {
@@ -45,14 +45,14 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.parent, opts.properties, opts.children, opts.icon, opts.cover]);
+      }, [opts.parent, opts.properties, opts.children, opts.icon, opts.cover], command);
     });
 
   pages
     .command("get [page_id]")
     .description("Get page")
     .option("--id <id>", "Page id")
-    .action(async (pageId, opts) => {
+    .action(async (pageId, opts, command) => {
       await runAction("pages get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(pageId, opts.id);
@@ -71,7 +71,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   pages
@@ -85,7 +85,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
     .option("--cover <json>", "Cover JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (pageId, opts) => {
+    .action(async (pageId, opts, command) => {
       await runAction("pages update", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(pageId, opts.id);
@@ -117,7 +117,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.properties, opts.icon, opts.cover]);
+      }, [opts.properties, opts.icon, opts.cover], command);
     });
 
   pages
@@ -127,7 +127,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
     .requiredOption("--parent <json>", "Parent JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (pageId, opts) => {
+    .action(async (pageId, opts, command) => {
       await runAction("pages move", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(pageId, opts.id);
@@ -154,7 +154,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.parent]);
+      }, [opts.parent], command);
     });
 
   pages
@@ -162,7 +162,7 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
     .description("Get page property")
     .option("--id <id>", "Page id")
     .option("--property-id <id>", "Property id")
-    .action(async (pageId, propertyId, opts) => {
+    .action(async (pageId, propertyId, opts, command) => {
       await runAction("pages get-property", opts, async (ctx) => {
         requireToken(ctx.config);
         const pid = parseId(pageId, opts.id);
@@ -182,6 +182,6 @@ export function registerPages(program: Command, helpers: CommandHelpers): void {
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 }

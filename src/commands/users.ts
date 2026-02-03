@@ -15,7 +15,7 @@ export function registerUsers(program: Command, helpers: CommandHelpers): void {
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("users list", opts, async (ctx) => {
         requireToken(ctx.config);
         if (opts.all) {
@@ -51,14 +51,14 @@ export function registerUsers(program: Command, helpers: CommandHelpers): void {
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   users
     .command("get [user_id]")
     .description("Get user")
     .option("--id <id>", "User id")
-    .action(async (userId, opts) => {
+    .action(async (userId, opts, command) => {
       await runAction("users get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(userId, opts.id);
@@ -77,13 +77,13 @@ export function registerUsers(program: Command, helpers: CommandHelpers): void {
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   users
     .command("me")
     .description("Get current user")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("users me", opts, async (ctx) => {
         requireToken(ctx.config);
         const response = await request<any>({
@@ -95,6 +95,6 @@ export function registerUsers(program: Command, helpers: CommandHelpers): void {
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 }

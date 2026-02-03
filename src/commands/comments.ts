@@ -17,7 +17,7 @@ export function registerComments(program: Command, helpers: CommandHelpers): voi
     .requiredOption("--rich-text <json>", "Rich text JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("comments create", opts, async (ctx) => {
         requireToken(ctx.config);
         const body = {
@@ -25,10 +25,10 @@ export function registerComments(program: Command, helpers: CommandHelpers): voi
           discussion_id: opts.discussionId,
           rich_text: await readJsonInput(opts.richText)
         };
-        await validateInput(ctx, schemaPath("comments-create.schema.json"), body);
         if (opts.dryRun) {
           return { data: { dry_run: true, request: body }, exitCode: 40 };
         }
+        await validateInput(ctx, schemaPath("comments-create.schema.json"), body);
         const response = await request<any>({
           method: "POST",
           path: "/comments",
@@ -40,7 +40,7 @@ export function registerComments(program: Command, helpers: CommandHelpers): voi
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.parent, opts.richText]);
+      }, [opts.parent, opts.richText], command);
     });
 
   comments
@@ -50,7 +50,7 @@ export function registerComments(program: Command, helpers: CommandHelpers): voi
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("comments list", opts, async (ctx) => {
         requireToken(ctx.config);
         if (opts.all) {
@@ -86,14 +86,14 @@ export function registerComments(program: Command, helpers: CommandHelpers): voi
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   comments
     .command("get [comment_id]")
     .description("Get comment")
     .option("--id <id>", "Comment id")
-    .action(async (commentId, opts) => {
+    .action(async (commentId, opts, command) => {
       await runAction("comments get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(commentId, opts.id);
@@ -112,6 +112,6 @@ export function registerComments(program: Command, helpers: CommandHelpers): voi
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 }

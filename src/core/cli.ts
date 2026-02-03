@@ -92,12 +92,17 @@ export async function runAction<T>(
   command: string,
   options: GlobalOptions,
   handler: (ctx: Context) => Promise<ActionResult<T>>,
-  stdinInputs: Array<string | undefined> = []
+  stdinInputs: Array<string | undefined> = [],
+  cmd?: Command
 ): Promise<void> {
+  const mergedOptions =
+    cmd && typeof cmd.optsWithGlobals === "function"
+      ? (cmd.optsWithGlobals() as GlobalOptions)
+      : options;
   const start = Date.now();
   try {
-    await ensureTokenStdinSafe(options, stdinInputs);
-    const ctx = await resolveContext(command, options);
+    await ensureTokenStdinSafe(mergedOptions, stdinInputs);
+    const ctx = await resolveContext(command, mergedOptions);
     const result = await handler(ctx);
     if (!(ctx.ndjson && (result.data as any)?.streamed === true)) {
       const envelope = successEnvelope(command, result.data, [], {
@@ -107,7 +112,7 @@ export async function runAction<T>(
     }
     process.exit(result.exitCode ?? EXIT_CODES.SUCCESS);
   } catch (error) {
-    await handleError(command, error, start, options);
+    await handleError(command, error, start, mergedOptions);
   }
 }
 

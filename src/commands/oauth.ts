@@ -17,7 +17,7 @@ export function registerOauth(program: Command, helpers: CommandHelpers): void {
     .option("--external-account <id>", "External account id")
     .option("--client-id <id>", "OAuth client id")
     .option("--client-secret <secret>", "OAuth client secret")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("oauth token", opts, async (ctx) => {
         const body = {
           grant_type: opts.grantType,
@@ -40,14 +40,14 @@ export function registerOauth(program: Command, helpers: CommandHelpers): void {
           }
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   oauth
     .command("introspect")
     .description("Introspect OAuth token")
     .requiredOption("--token <token>", "Token to introspect")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("oauth introspect", opts, async (ctx) => {
         const body = { token: opts.token };
         await validateInput(ctx, schemaPath("oauth-introspect.schema.json"), body);
@@ -60,14 +60,14 @@ export function registerOauth(program: Command, helpers: CommandHelpers): void {
           body
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   oauth
     .command("revoke")
     .description("Revoke OAuth token")
     .requiredOption("--token <token>", "Token to revoke")
-    .action(async (opts) => {
+    .action(async (opts, command) => {
       await runAction("oauth revoke", opts, async (ctx) => {
         const body = { token: opts.token };
         await validateInput(ctx, schemaPath("oauth-revoke.schema.json"), body);
@@ -80,6 +80,6 @@ export function registerOauth(program: Command, helpers: CommandHelpers): void {
           body
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 }

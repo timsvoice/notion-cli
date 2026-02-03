@@ -13,7 +13,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
     .command("get [block_id]")
     .description("Get block")
     .option("--id <id>", "Block id")
-    .action(async (blockId, opts) => {
+    .action(async (blockId, opts, command) => {
       await runAction("blocks get", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(blockId, opts.id);
@@ -32,7 +32,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   blocks
@@ -42,7 +42,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
     .requiredOption("--data <json>", "Block data JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (blockId, opts) => {
+    .action(async (blockId, opts, command) => {
       await runAction("blocks update", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(blockId, opts.id);
@@ -68,7 +68,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.data]);
+      }, [opts.data], command);
     });
 
   blocks
@@ -76,7 +76,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
     .description("Delete block")
     .option("--id <id>", "Block id")
     .option("--dry-run", "Dry run")
-    .action(async (blockId, opts) => {
+    .action(async (blockId, opts, command) => {
       await runAction("blocks delete", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(blockId, opts.id);
@@ -98,7 +98,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   blocks
@@ -108,7 +108,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
     .option("--page-size <n>", "Page size", (value) => Number(value))
     .option("--start-cursor <cursor>", "Start cursor")
     .option("--all", "Auto paginate")
-    .action(async (blockId, opts) => {
+    .action(async (blockId, opts, command) => {
       await runAction("blocks list-children", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(blockId, opts.id);
@@ -149,7 +149,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
           retries: ctx.config.retries
         });
         return { data: response.data };
-      });
+      }, [], command);
     });
 
   blocks
@@ -159,7 +159,7 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
     .requiredOption("--children <json>", "Children JSON or @file")
     .option("--dry-run", "Dry run")
     .option("--idempotency-key <key>", "Idempotency key")
-    .action(async (blockId, opts) => {
+    .action(async (blockId, opts, command) => {
       await runAction("blocks append-children", opts, async (ctx) => {
         requireToken(ctx.config);
         const id = parseId(blockId, opts.id);
@@ -185,6 +185,6 @@ export function registerBlocks(program: Command, helpers: CommandHelpers): void 
           idempotencyKey: opts.idempotencyKey
         });
         return { data: response.data };
-      }, [opts.children]);
+      }, [opts.children], command);
     });
 }
