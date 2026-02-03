@@ -1,5 +1,6 @@
 import { Argument, Command, Help, Option } from "commander";
 import { EXIT_CODES } from "./errors.js";
+import { CLI_VERSION } from "./constants.js";
 
 type HelpFlag = {
   name: string;
@@ -221,7 +222,7 @@ export function buildHelpTree(program: Command): HelpTree {
 
   return {
     name: program.name(),
-    version: program.version(),
+    version: program.version() ?? CLI_VERSION,
     description: program.description() ?? undefined,
     usage: rootUsage,
     global_flags: globalFlags,

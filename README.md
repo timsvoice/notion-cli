@@ -43,9 +43,32 @@ export NOTION_TOKEN="your_notion_integration_token"
 notion users me
 ```
 
+You can also store the token in a local config file:
+
+```bash
+notion config set token "your_notion_integration_token"
+notion users me
+```
+
+Config is stored at `~/.config/notion-cli/config.json` with permissions `600`.
+
 ## Development
 
 ```bash
 npm install
 npm run dev -- --help
+```
+
+## Releases
+
+Create a tag matching the package version and push it:
+
+```bash
+npm run release
+```
+
+Use a tag in the install URL for stability:
+
+```bash
+npm install -g https://codeload.github.com/YOUR_ORG_OR_USER/notion-cli/tar.gz/v1.0.0
 ```
