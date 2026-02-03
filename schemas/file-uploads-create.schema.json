@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Notion File Uploads Create",
+  "type": "object",
+  "required": ["file_name", "content_type", "size"],
+  "properties": {
+    "file_name": {"type": "string"},
+    "content_type": {"type": "string"},
+    "size": {"type": "integer", "minimum": 1}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Notion Data Sources Update",
+  "type": "object",
+  "minProperties": 1,
+  "properties": {
+    "title": {"type": "array", "items": {"type": "object"}},
+    "properties": {"type": "object"},
+    "description": {"type": "array", "items": {"type": "object"}},
+    "icon": {"type": ["object", "null"]},
+    "cover": {"type": ["object", "null"]}
+  },
+  "additionalProperties": true
+}

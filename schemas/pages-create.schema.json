@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Notion Pages Create",
+  "type": "object",
+  "required": ["parent", "properties"],
+  "properties": {
+    "parent": {
+      "type": "object",
+      "oneOf": [
+        {"required": ["page_id"], "properties": {"page_id": {"type": "string"}}},
+        {"required": ["database_id"], "properties": {"database_id": {"type": "string"}}},
+        {"required": ["data_source_id"], "properties": {"data_source_id": {"type": "string"}}}
+      ]
+    },
+    "properties": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "children": {
+      "type": "array",
+      "items": {"type": "object"},
+      "minItems": 1
+    },
+    "icon": {
+      "type": ["object", "null"]
+    },
+    "cover": {
+      "type": ["object", "null"]
+    }
+  },
+  "additionalProperties": true
+}

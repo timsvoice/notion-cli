@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Notion Pages Update",
+  "type": "object",
+  "minProperties": 1,
+  "properties": {
+    "properties": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "archived": {
+      "type": "boolean"
+    },
+    "in_trash": {
+      "type": "boolean"
+    },
+    "icon": {
+      "type": ["object", "null"]
+    },
+    "cover": {
+      "type": ["object", "null"]
+    }
+  },
+  "additionalProperties": true
+}
