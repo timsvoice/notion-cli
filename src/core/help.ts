@@ -181,7 +181,7 @@ function generateExamples(cmd: Command): string[] {
 
   const base = path;
   if (cmd.commands.length > 0) {
-    const sub = cmd.commands.find((child) => !child.hidden);
+    const sub = cmd.commands.find((child) => !(child as any).hidden);
     if (sub) {
       return [`${base} ${sub.name()} --help`];
     }
@@ -249,7 +249,7 @@ export function formatHelp(cmd: Command, helper: Help): string {
 
   if (cmd.commands.length > 0) {
     lines.push("COMMANDS:");
-    lines.push(...formatCommands(cmd.commands.filter((child) => !child.hidden)));
+    lines.push(...formatCommands(cmd.commands.filter((child) => !(child as any).hidden)));
     lines.push("");
   }
 

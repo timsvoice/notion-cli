@@ -5,10 +5,11 @@ Notion CLI for coding agents.
 ## Install from GitHub
 
 ```bash
-npm install -g github:YOUR_ORG_OR_USER/notion-cli
+npm install -g https://codeload.github.com/YOUR_ORG_OR_USER/notion-cli/tar.gz/HEAD
 ```
 
 This repo includes prebuilt `dist/`, so installation does not require TypeScript.
+If you install from GitHub, ensure `dist/` is committed to the repo.
 
 ## Private Repo Install
 

@@ -1,0 +1,13 @@
+import os from "node:os";
+import path from "node:path";
+export const CLI_VERSION = "1.0.0";
+export const SCHEMA_VERSION = 1;
+export const BASE_URL = "https://api.notion.com/v1";
+export const DEFAULT_NOTION_VERSION = "2025-09-03";
+export const CONFIG_DIR = path.join(os.homedir(), ".config", "notion-cli");
+export const CONFIG_PATH = path.join(CONFIG_DIR, "config.json");
+export const OPS_PATH = path.join(CONFIG_DIR, "ops.jsonl");
+export const DEFAULT_TIMEOUT_MS = 30000;
+export const DEFAULT_RETRIES = 2;
+export const DEFAULT_CHUNK_SIZE = 5 * 1024 * 1024;
+export const RETENTION_DAYS = 30;
